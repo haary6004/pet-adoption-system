@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Find a friend · Paw Haven{% endblock %}
+{% block content %}
+<section class="hero"><span class="tag">A little kindness goes a long way</span><h1>Meet your new best friend.</h1><p>Browse pets looking for a home. Sign up to send an adoption request, and our team will be in touch.</p><a class="button" href="{% url 'accounts:signup' %}">Join Paw Haven</a></section>
+<h2>Pets ready for a home</h2>
+{% if pets %}<div class="grid">{% for pet in pets %}<article class="card"><span class="tag">{{ pet.animal_type }}</span><h2>{{ pet.name }}</h2><p>{{ pet.age }} year{{ pet.age|pluralize }} old</p><p>{{ pet.description|default:'A lovely pet waiting to meet you.' }}</p>
+{% if user.is_authenticated %}<form method="post" action="{% url 'pets:request' pet.id %}">{% csrf_token %}<label for="message-{{ pet.id }}">A short note (optional)</label><textarea id="message-{{ pet.id }}" name="message" rows="2" maxlength="500" placeholder="Tell us why you are interested"></textarea><button type="submit">Ask to adopt</button></form>{% else %}<a class="button" href="{% url 'accounts:login' %}?next=/">Log in to ask</a>{% endif %}</article>{% endfor %}</div>{% else %}<div class="panel"><h3>No pets listed yet</h3><p>A staff member can add pets from the admin site.</p></div>{% endif %}
+{% endblock %}
